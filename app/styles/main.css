@@ -1,0 +1,22 @@
+body {
+  background: #fafafa;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #333;
+}
+
+.upload-area {
+  padding: 2rem 0;
+}
+
+.image-area {
+
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.editor-area {
+  word-break: break-all;
+}
