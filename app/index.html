@@ -16,24 +16,29 @@
     <!-- endbuild -->
   </head>
   <body>
-    <!--[if lt IE 10]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-    
-    <div class="upload-area">
-      <input type="file" id="fileInput" name="file" />
+    <div id="app">
+      <div class="upload-area">
+        <input type="file" id="fileInput" name="file" v-on="change: handleFileSelect" />
+      </div>
+      <div class="image-area">
+        <img id="image" src="{{rawImage | base64Jpeg}}" />
+      </div>
+      <div class="edit-area">
+        <div v-repeat="dqt: dqts">
+          <div v-component="dqt" v-with="dqt" inline-template>
+            {{id}}
+            <div class="dqt-editor">
+              <span class="dqt-cell" v-repeat="dqtByte: data"><input v-on="keyup: byteChanged($index, dqtByte)" v-model="dqtByte" /></span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="image-area">
-      <img id="image" />
-    </div>
-    <div class="edit-area">
-      <span id="editor"></span>
-    </div>
-
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/stringview/stringview.js"></script>
+    <script src="bower_components/vue/dist/vue.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 

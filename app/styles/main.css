@@ -22,6 +22,21 @@ img {
   word-break: break-all;
 }
 
-  .dqtTable td {
-    padding: 1em;
+  .dqt-editor {
+    max-width: 50rem;
+    margin-bottom: 2rem;
+  }
+
+    .dqt-cell {
+      float: left;
+      width: 12.5%;
+    }
+
+  .dqt-editor:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
   }

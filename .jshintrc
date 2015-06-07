@@ -19,6 +19,7 @@
   "smarttabs": true,
   "jquery": true,
   "globals": {
-    "StringView": false
+    "StringView": false,
+    "Vue": false
   }
 }

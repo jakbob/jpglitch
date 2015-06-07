@@ -1,7 +1,9 @@
 (function() {
 	'use strict';
 
-	var imageData;
+	function updateDqt(startingIndex, data) {
+		console.log(startingIndex, data);
+	}
 
 	function parseQuantizationTables(arrayBuffer) {
 		var data = new DataView(arrayBuffer);
@@ -48,40 +50,6 @@
 		}
 	}
 
-	function updateImage(rawImage) {
-		var img = document.getElementById('image');
-		img.src = 'data:image/png;base64,'+StringView.bytesToBase64(rawImage);
-	}
-
-	function updateEditor(dqts) {
-		dqts.forEach(function(dqt) {
-			var tableElement = $('<table class="dqtTable">');
-			tableElement.html(Array.prototype.reduce.call(dqt.data, function(text, currentByte, i) {
-				if(i%8 === 0) {
-					text += '<tr>';
-				}
-				text += '<td contentEditable>'+currentByte.toString(16) + '</td>';
-				if (i%8 === 7) {
-					text += '</tr>';
-				}
-				return text;
-			}, ''));
-			tableElement.on('keyup', 'td', dqtChange);
-			$('#editor').append(tableElement);
-		});
-	}
-
-	function dqtChange(e) {
-		var cell = e.target;
-		var cellValue = cell.innerHTML
-			.replace(/[^0-9a-f]/ig, '')
-			.substring(0,2);
-		//var column = e.target.cellIndex;
-		//var row = e.target.parentNode.rowIndex;
-
-		cell.innerHTML = cellValue;
-	}
-
 	function handleFileSelect(evt) {
 		var files = evt.target.files; // FileList object
 
@@ -92,13 +60,9 @@
 			reader.onload = (function() {
 				return function(e) {
 					var raw = e.target.result;
-					imageData = { 
-						raw: new Uint8Array(raw),
-						dqts: parseQuantizationTables(raw) 
-					};
 
-					updateImage(imageData.raw);
-					updateEditor(imageData.dqts);
+					app.$data.dqts = parseQuantizationTables(raw);
+					app.$data.rawImage = new Uint8Array(raw);
 				};
 			})();
 
@@ -106,5 +70,35 @@
 			reader.readAsArrayBuffer(files[0]);
 		}
 	}
-	document.getElementById('fileInput').addEventListener('change', handleFileSelect, false);
+
+
+
+	Vue.filter('base64Jpeg', function(rawImage) {
+		if(!rawImage) { return ''; }
+		return 'data:image/png;base64,'+StringView.bytesToBase64(rawImage);
+	});
+
+	var app = new Vue({
+		el: '#app',
+		data: {
+			dqts: null,
+			rawImage: null
+		},
+		methods: {
+			handleFileSelect: handleFileSelect
+		},
+		components: {
+			dqt: {
+				methods: {
+					byteChanged: function(index, value) {
+						if (value > 255) { value = 255; }
+						if (value < 0) { value = 0; }
+						this.data[index] = value;
+
+						updateDqt(this.position, this.data);
+					}
+				}
+			}
+		}
+	});
 })();

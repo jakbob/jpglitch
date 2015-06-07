@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "jquery": "~1.11.1",
-    "stringview": "*"
+    "stringview": "*",
+    "vue": "~0.11.10"
   }
 }
