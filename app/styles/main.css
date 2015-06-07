@@ -9,14 +9,19 @@ body {
 }
 
 .image-area {
-
+  height: 60vh;
 }
 
 img {
-  max-width: 100%;
-  height: auto;
+  width: auto;
+  height: 100%;
+  object-fit: contain;
 }
 
 .editor-area {
   word-break: break-all;
 }
+
+  .dqtTable td {
+    padding: 1em;
+  }
