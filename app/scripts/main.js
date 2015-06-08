@@ -1,10 +1,6 @@
 (function() {
 	'use strict';
 
-	function updateDqt(startingIndex, data) {
-		console.log(startingIndex, data);
-	}
-
 	function parseQuantizationTables(arrayBuffer) {
 		var data = new DataView(arrayBuffer);
 		var dqts = [];
@@ -34,7 +30,7 @@
 					console.log('found DQT!!!!! Position:', i, 'id:', dqtId, 'Length:', dqt.length, dqt);
 					dqts.push({
 						id: dqtId,
-						position: i,
+						position: i+3,
 						data: dqt
 					});
 
@@ -91,11 +87,17 @@
 			dqt: {
 				methods: {
 					byteChanged: function(index, value) {
+						value = parseInt(value);
 						if (value > 255) { value = 255; }
 						if (value < 0) { value = 0; }
-						this.data[index] = value;
+						
+						//this.$parent.rawImage[this.position + index] = value;
 
-						updateDqt(this.position, this.data);
+						var raw = this.$parent.rawImage.subarray(0);
+						//console.log(raw[this.position + index], value, this.position + index);
+						console.log(raw[this.position + index], this.$parent.rawImage[this.position + index]);
+						raw[this.position + index] = value;
+						this.$parent.rawImage = raw;
 					}
 				}
 			}

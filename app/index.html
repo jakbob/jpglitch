@@ -28,7 +28,7 @@
           <div v-component="dqt" v-with="dqt" inline-template>
             {{id}}
             <div class="dqt-editor">
-              <span class="dqt-cell" v-repeat="dqtByte: data"><input v-on="keyup: byteChanged($index, dqtByte)" v-model="dqtByte" /></span>
+              <span class="dqt-cell" v-repeat="dqtByte: data"><input v-on="keyup: byteChanged($index, dqtByte)" v-model="dqtByte" type="number" /></span>
             </div>
           </div>
         </div>
