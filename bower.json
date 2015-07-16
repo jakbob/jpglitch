@@ -4,6 +4,6 @@
   "dependencies": {
     "jquery": "~1.11.1",
     "stringview": "*",
-    "vue": "~0.11.10"
+    "vue": "~0.12.7"
   }
 }

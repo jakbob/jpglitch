@@ -1,6 +1,8 @@
 (function() {
 	'use strict';
 
+	Vue.config.debug = true;
+
 	function parseQuantizationTables(arrayBuffer) {
 		var data = new DataView(arrayBuffer);
 		var dqts = [];
@@ -85,6 +87,7 @@
 		},
 		components: {
 			dqt: {
+				props: ['dqt'],
 				methods: {
 					byteChanged: function(index, value) {
 						value = parseInt(value);
@@ -93,11 +96,11 @@
 						
 						//this.$parent.rawImage[this.position + index] = value;
 
-						var raw = this.$parent.rawImage.subarray(0);
+						var raw = app.rawImage.subarray(0);
 						//console.log(raw[this.position + index], value, this.position + index);
-						console.log(raw[this.position + index], this.$parent.rawImage[this.position + index]);
-						raw[this.position + index] = value;
-						this.$parent.rawImage = raw;
+						console.log(raw[this.dqt.position + index], app.rawImage[this.dqt.position + index]);
+						raw[this.dqt.position + index] = value;
+						app.rawImage = raw;
 					}
 				}
 			}
