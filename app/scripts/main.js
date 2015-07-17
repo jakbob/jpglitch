@@ -27,7 +27,7 @@
 				case 0xffdB:
 					var dqtLength = data.getUint16(i);
 					var dqtId = data.getUint8(i+2);
-					var dqt = new Uint8Array(arrayBuffer.slice(i+3, i+dqtLength));
+					var dqt = Array.prototype.slice.call(new Uint8Array(arrayBuffer.slice(i+3, i+dqtLength)));
 
 					console.log('found DQT!!!!! Position:', i, 'id:', dqtId, 'Length:', dqt.length, dqt);
 					dqts.push({
@@ -88,18 +88,33 @@
 		components: {
 			dqt: {
 				props: ['dqt'],
+				data: function() { return { boost: 0, previousBoost: 0 }; },
 				methods: {
 					byteChanged: function(index, value) {
-						value = parseInt(value);
 						if (value > 255) { value = 255; }
 						if (value < 0) { value = 0; }
 						
-						//this.$parent.rawImage[this.position + index] = value;
-
 						var raw = app.rawImage.subarray(0);
-						//console.log(raw[this.position + index], value, this.position + index);
-						console.log(raw[this.dqt.position + index], app.rawImage[this.dqt.position + index]);
 						raw[this.dqt.position + index] = value;
+						app.rawImage = raw;
+					},
+					boostChanged: function(boost) {
+						var boostDiff = boost - this.previousBoost;
+						this.previousBoost = boost;
+						var dqtPosition = this.dqt.position;
+						var dqtData = this.dqt.data;
+						var raw = app.rawImage.subarray(0);
+
+						Array.prototype.forEach.call(dqtData, function(value, index) {
+							value = value + boostDiff;
+							dqtData.$set(index, value);
+
+							if (value > 255) { value = 255; }
+							if (value < 0) { value = 0; }
+
+							raw[dqtPosition + index] = value;
+						});
+
 						app.rawImage = raw;
 					}
 				}

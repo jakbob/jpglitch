@@ -24,12 +24,13 @@
         <img id="image" src="{{rawImage | base64Jpeg}}" />
       </div>
       <div class="edit-area">
-        <div v-repeat="dqt: dqts">
-          <dqt dqt="{{dqt}}" inline-template>
+        <div v-repeat="dqt: dqts" class="dqt-area">
+          <dqt dqt="{{@ dqt}}" inline-template>
             {{dqt.id}}
             <div class="dqt-editor">
-              <span class="dqt-cell" v-repeat="dqtByte: dqt.data"><input v-on="keyup: byteChanged($index, dqtByte)" v-model="dqtByte" type="number" /></span>
+              <span class="dqt-cell" v-repeat="dqtByte: dqt.data"><input v-on="keyup: byteChanged($index, dqtByte)" v-model="dqtByte" type="number" number /></span>
             </div>
+            <input type="range" min="0" max="255" value="0" class="dqt-boost" v-model="boost" v-on="change: boostChanged(boost)" number />
           </dqt>
         </div>
       </div>

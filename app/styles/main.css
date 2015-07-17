@@ -21,10 +21,16 @@ img {
 .editor-area {
   word-break: break-all;
 }
+  
+  input[type="number"] {
+    width: 100%;
+    display: inline-block;
+  }
 
   .dqt-editor {
     max-width: 50rem;
     margin-bottom: 2rem;
+    float: left;
   }
 
     .dqt-cell {
@@ -32,7 +38,12 @@ img {
       width: 12.5%;
     }
 
-  .dqt-editor:after {
+    .dqt-boost { 
+      float: left;
+      transform: rotateZ(-90deg) translateX(-50%);
+    }
+
+  .dqt-editor:after, .dqt-area:after {
     visibility: hidden;
     display: block;
     font-size: 0;
