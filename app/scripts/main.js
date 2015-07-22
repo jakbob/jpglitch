@@ -48,42 +48,70 @@
 		}
 	}
 
-	function handleFileSelect(evt) {
-		var files = evt.target.files; // FileList object
+	function loadFile(file) {
+		var reader = new FileReader();
 
-		if(files.length > 0) {
-			var reader = new FileReader();
+		// Closure to capture the file information.
+		reader.onload = (function() {
+			return function(e) {
+				var raw = e.target.result;
 
-			// Closure to capture the file information.
-			reader.onload = (function() {
-				return function(e) {
-					var raw = e.target.result;
+				app.$data.dqts = parseQuantizationTables(raw);
+				app.$data.rawImage = new Uint8Array(raw);
+			};
+		})();
 
-					app.$data.dqts = parseQuantizationTables(raw);
-					app.$data.rawImage = new Uint8Array(raw);
-				};
-			})();
-
-			// Read in the image file as a data URL.
-			reader.readAsArrayBuffer(files[0]);
-		}
+		// Read in the image file as a data URL.
+		reader.readAsArrayBuffer(file);
+		app.fileLoaded = true;
 	}
-
-
 
 	Vue.filter('base64Jpeg', function(rawImage) {
 		if(!rawImage) { return ''; }
 		return 'data:image/png;base64,'+StringView.bytesToBase64(rawImage);
 	});
 
+	Vue.directive('jpgdrop', {
+		bind: function() {
+			var self = this;
+
+			this.el.addEventListener('dragenter', function(e) {
+				console.log(e);
+				e.target.classList.add('dropover');
+			});
+			this.el.addEventListener('dragleave', function(e) {
+				e.target.classList.remove('dropover');
+			});
+
+			this.el.addEventListener('dragover', function(e) {
+				e.preventDefault();
+				e.dataTransfer.dropEffect = 'copy';
+			});
+			this.el.addEventListener('drop', function(e) {
+				e.preventDefault();
+				self.dropCallback(e.dataTransfer.files[0]);
+				e.target.classList.remove('dropover');
+			});
+		},
+		update: function(callback) {
+			this.dropCallback = callback;
+		}
+	});
+
 	var app = new Vue({
 		el: '#app',
 		data: {
 			dqts: null,
-			rawImage: null
+			rawImage: null,
+			fileLoaded: false
 		},
 		methods: {
-			handleFileSelect: handleFileSelect
+			handleFileSelect: function handleFileSelect(e) {
+				if(e.target.files.length > 0) {
+					loadFile(e.target.files[0]);
+				}
+			},
+			loadFile: loadFile
 		},
 		components: {
 			dqt: {
