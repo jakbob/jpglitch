@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 (function() {
 	'use strict';
 
@@ -64,11 +66,22 @@
 		// Read in the image file as a data URL.
 		reader.readAsArrayBuffer(file);
 		app.fileLoaded = true;
-	}
+  }
+
+  function _arrayBufferToBase64( buffer ) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
+}
 
 	Vue.filter('base64Jpeg', function(rawImage) {
-		if(!rawImage) { return ''; }
-		return 'data:image/png;base64,'+StringView.bytesToBase64(rawImage);
+    if(!rawImage) { return ''; }
+    var base64image =  _arrayBufferToBase64(rawImage);
+		return 'data:image/png;base64,'+base64image;
 	});
 
 	Vue.directive('jpgdrop', {
@@ -121,7 +134,7 @@
 					byteChanged: function(index, value) {
 						if (value > 255) { value = 255; }
 						if (value < 0) { value = 0; }
-						
+
 						var raw = app.rawImage.subarray(0);
 						raw[this.dqt.position + index] = value;
 						app.rawImage = raw;
