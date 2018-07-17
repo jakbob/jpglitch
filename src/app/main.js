@@ -30,7 +30,6 @@ import './main.css';
       var self = this;
 
       this.el.addEventListener('dragenter', function (e) {
-        console.log(e);
         e.target.classList.add('dropover');
       });
       this.el.addEventListener('dragleave', function (e) {

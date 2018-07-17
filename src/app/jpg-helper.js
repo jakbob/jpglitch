@@ -12,38 +12,38 @@ export class JPGHelper {
       var marker = data.getUint16(i);
       i += 2;
       switch (marker) {
-        case 0xffd8:
-          console.log('start of image');
-          break;
-        case 0xffe0:
-        case 0xffe1:
-        case 0xffed:
-        case 0xffc0:
-        case 0xffc4:
-          console.log('found marker', marker.toString(16));
-          var length = data.getUint16(i);
-          i += length;
-          break;
-        case 0xffdB:
-          var dqtLength = data.getUint16(i);
-          var dqtId = data.getUint8(i + 2);
-          var dqt = Array.prototype.slice.call(new Uint8Array(arrayBuffer.slice(i + 3, i + dqtLength)));
+      case 0xffd8:
+        console.info('start of image');
+        break;
+      case 0xffe0:
+      case 0xffe1:
+      case 0xffed:
+      case 0xffc0:
+      case 0xffc4:
+        console.info('found marker', marker.toString(16));
+        var length = data.getUint16(i);
+        i += length;
+        break;
+      case 0xffdB:
+        var dqtLength = data.getUint16(i);
+        var dqtId = data.getUint8(i + 2);
+        var dqt = Array.prototype.slice.call(new Uint8Array(arrayBuffer.slice(i + 3, i + dqtLength)));
 
-          console.log('found DQT!!!!! Position:', i, 'id:', dqtId, 'Length:', dqt.length, dqt);
-          dqts.push({
-            id: dqtId,
-            position: i + 3,
-            data: dqt
-          });
+        console.info('found DQT!!!!! Position:', i, 'id:', dqtId, 'Length:', dqt.length, dqt);
+        dqts.push({
+          id: dqtId,
+          position: i + 3,
+          data: dqt
+        });
 
-          i += data.getUint16(i);
-          break;
-        case 0xffda:
-          console.log('Found Start of Scan. All DQTs are probably found, aborting...');
-          return dqts;
-        default:
-          console.log('Unknown maker:', marker.toString(16));
-          return dqts;
+        i += data.getUint16(i);
+        break;
+      case 0xffda:
+        console.info('Found Start of Scan. All DQTs are probably found, aborting...');
+        return dqts;
+      default:
+        console.info('Unknown maker:', marker.toString(16));
+        return dqts;
       }
     }
   }
