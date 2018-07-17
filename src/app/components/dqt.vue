@@ -18,7 +18,7 @@
     <input
       v-model="boost"
       type="range"
-      min="0"
+      min="-255"
       max="255"
       value="0"
       class="dqt-boost"
@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import Vue from 'vue';
+
 export default {
   props: {
     dqt: {
@@ -49,13 +51,13 @@ export default {
         value = 0;
       }
 
-      this.dqt.data[index] = value;
+      Vue.set(this.dqt.data, index, value);
       this.$emit('change', this.dqt);
     },
     boostChanged: function (boost) {
       const boostDiff = boost - this.previousBoost;
       this.previousBoost = boost;
-      const dqtData = this.dqt.data;
+      const dqtData = {...this.dqt.data};
 
       Array.prototype.forEach.call(dqtData, (value, index) => {
         value = value + boostDiff;
@@ -66,10 +68,13 @@ export default {
         if (value < 0) {
           value = 0;
         }
-        dqtData.$set(index, value);
+        dqtData[index] = value;
       });
 
-      this.$emit('change', this.dqt);
+      this.$emit('change', {
+        ...this.dqt,
+        data: dqtData
+      });
     }
   }
 };

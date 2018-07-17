@@ -7,13 +7,13 @@
     </div>
     <div class="edit-area">
       <div
-        v-for="dqt in dqts"
+        v-for="(dqt, index) in dqts"
         :key="dqt.id"
         class="dqt-area"
       >
         <dqt
           :dqt="dqt"
-          @change="dqtUpdated(dqt)"
+          @change="dqtUpdated(dqt, index)"
         ></dqt>
       </div>
     </div>
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import Dqt from './dqt.vue';
 import { JPGHelper } from 'app/jpg-helper';
 
@@ -45,7 +46,9 @@ export default {
     }
   },
   methods: {
-    dqtUpdated(dqt) {
+    dqtUpdated(dqt, index) {
+      Vue.set(this.dqts, index, dqt);
+
       var raw = this.rawImage.subarray(0);
       raw.set(dqt.data, dqt.position);
       this.rawImage = raw;
