@@ -3,7 +3,7 @@
     <div
       v-jpgdrop="loadFile"
       v-show="!fileLoaded"
-      class="dropzone"
+      class="upload-area"
     >
       <p>Släpp en JPG här</p>
       <p>eller</p>
@@ -14,29 +14,31 @@
         @change="handleFileSelect"
       />
     </div>
-    <div
-      v-jpgdrop="loadFile"
-      class="image-area"
-    >
-      <img
-        id="image"
-        :src="rawImage | base64Jpeg"
-      />
+    <div v-show="fileLoaded">
       <button
         class="back-button"
         @click="fileLoaded=false"
       >Tillbaka</button>
-    </div>
-    <div class="edit-area">
       <div
-        v-for="dqt in dqts"
-        :key="dqt.id"
-        class="dqt-area"
+        v-jpgdrop="loadFile"
+        class="image-area"
       >
-        <dqt
-          :dqt="dqt"
-          @change="dqtUpdated(dqt)"
-        ></dqt>
+        <img
+          id="image"
+          :src="rawImage | base64Jpeg"
+        />
+      </div>
+      <div class="edit-area">
+        <div
+          v-for="dqt in dqts"
+          :key="dqt.id"
+          class="dqt-area"
+        >
+          <dqt
+            :dqt="dqt"
+            @change="dqtUpdated(dqt)"
+          ></dqt>
+        </div>
       </div>
     </div>
   </div>
