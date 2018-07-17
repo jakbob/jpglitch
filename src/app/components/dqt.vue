@@ -75,6 +75,34 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+  input[type="number"] {
+    width: 100%;
+    display: inline-block;
+  }
 
+  .dqt-editor {
+    max-width: 50rem;
+    margin-bottom: 2rem;
+    float: left;
+  }
+
+    .dqt-cell {
+      float: left;
+      width: 12.5%;
+    }
+
+    .dqt-boost {
+      float: left;
+      transform: rotateZ(-90deg) translateX(-50%);
+    }
+
+  .dqt-editor:after, .dqt-area:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+  }
 </style>

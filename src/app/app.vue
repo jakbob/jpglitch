@@ -1,82 +1,47 @@
 <template>
   <div>
-    <div
+    <file-select
       v-jpgdrop="loadFile"
-      v-show="!fileLoaded"
-      class="upload-area"
+      v-show="!imageFile"
+      @fileSelected="loadFile"
     >
-      <p>Släpp en JPG här</p>
-      <p>eller</p>
-      <input
-        id="fileInput"
-        name="file"
-        type="file"
-        @change="handleFileSelect"
-      />
-    </div>
-    <div v-show="fileLoaded">
+    </file-select>
+    <div v-show="imageFile">
       <button
         class="back-button"
-        @click="fileLoaded=false"
+        @click="imageFile = null"
       >Tillbaka</button>
-      <div
-        v-jpgdrop="loadFile"
-        class="image-area"
-      >
-        <img
-          id="image"
-          :src="rawImage | base64Jpeg"
-        />
-      </div>
-      <div class="edit-area">
-        <div
-          v-for="dqt in dqts"
-          :key="dqt.id"
-          class="dqt-area"
-        >
-          <dqt
-            :dqt="dqt"
-            @change="dqtUpdated(dqt)"
-          ></dqt>
-        </div>
-      </div>
+
+      <editor :image-file="imageFile"></editor>
     </div>
   </div>
 </template>
 
 <script>
 import { FileHelper } from './file-helper';
-import { JPGHelper } from './jpg-helper';
-import Dqt from './components/dqt.vue';
+import FileSelect from './components/file-select.vue';
+import Editor from './components/editor.vue';
 
 export default {
   components: {
-    dqt: Dqt
+    'editor': Editor,
+    'file-select': FileSelect,
   },
   data: () => ({
-    dqts: null,
-    rawImage: null,
-    fileLoaded: false
+    imageFile: null
   }),
   methods: {
-    handleFileSelect(e) {
-      if (e.target.files.length > 0) {
-        this.loadFile(e.target.files[0]);
-      }
-    },
     loadFile(file) {
       FileHelper.loadFile(file).then(raw => {
-        this.$data.dqts = JPGHelper.parseQuantizationTables(raw);
-        this.$data.rawImage = new Uint8Array(raw);
+        this.imageFile = raw;
       });
-
-      this.fileLoaded = true;
-    },
-    dqtUpdated(dqt) {
-      var raw = this.rawImage.subarray(0);
-      raw.set(dqt.data, dqt.position);
-      this.rawImage = raw;
     }
   }
 };
 </script>
+
+<style scoped>
+  .back-button {
+    margin-bottom: 1rem;
+  }
+</style>
