@@ -2,8 +2,10 @@ const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
+  mode: 'development',
   entry: './src/app/main.js',
   devtool: 'inline-source-map',
   devServer: {
@@ -14,6 +16,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'src/index.html'
     }),
+    new VueLoaderPlugin(),
     new webpack.HotModuleReplacementPlugin()
   ],
   module: {
@@ -24,6 +27,10 @@ module.exports = {
           'style-loader',
           'css-loader'
         ]
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader'
       }
     ]
   },
