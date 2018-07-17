@@ -13,23 +13,14 @@ export class JPGHelper {
       i += 2;
       switch (marker) {
       case 0xffd8:
-        console.info('start of image');
-        break;
-      case 0xffe0:
-      case 0xffe1:
-      case 0xffed:
-      case 0xffc0:
-      case 0xffc4:
-        console.info('found marker', marker.toString(16));
-        var length = data.getUint16(i);
-        i += length;
+        console.info('Start of image');
         break;
       case 0xffdB:
         var dqtLength = data.getUint16(i);
         var dqtId = data.getUint8(i + 2);
         var dqt = Array.prototype.slice.call(new Uint8Array(arrayBuffer.slice(i + 3, i + dqtLength)));
 
-        console.info('found DQT!!!!! Position:', i, 'id:', dqtId, 'Length:', dqt.length, dqt);
+        console.info('Found DQT! Position:', i, 'Id:', dqtId, 'Length:', dqt.length);
         dqts.push({
           id: dqtId,
           position: i + 3,
@@ -42,8 +33,9 @@ export class JPGHelper {
         console.info('Found Start of Scan. All DQTs are probably found, aborting...');
         return dqts;
       default:
-        console.info('Unknown maker:', marker.toString(16));
-        return dqts;
+        console.info('Found marker', marker.toString(16));
+        var length = data.getUint16(i);
+        i += length;
       }
     }
   }

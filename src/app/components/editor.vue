@@ -41,6 +41,7 @@ export default {
   }),
   watch: {
     imageFile(value) {
+      if (!value) { return; }
       this.dqts = JPGHelper.parseQuantizationTables(value);
       this.rawImage = new Uint8Array(value);
     }
