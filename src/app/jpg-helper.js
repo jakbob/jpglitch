@@ -1,43 +1,57 @@
 export class JPGHelper {
   /**
    *
-   * @param {ArrayBuffer} arrayBuffer
+   * @param {ArrayBuffer} jpgData
    */
-  static parseQuantizationTables(arrayBuffer) {
-    var data = new DataView(arrayBuffer);
-    var dqts = [];
+  static parseQuantizationTables(jpgData) {
+    const dataView = new DataView(jpgData);
+    let positions = this._getDQTMarkerPositions(dataView);
+    return positions.map(position => {
+      const dqtLength = dataView.getUint16(position);
+      const dqtId = dataView.getUint8(position + 2);
+      const dqtPosition = position + 3;
+      const dqt = Array.prototype.slice.call(
+        new Uint8Array(jpgData.slice(dqtPosition, position + dqtLength))
+      );
 
-    var i = 0;
-    while (i < data.byteLength) {
-      var marker = data.getUint16(i);
+      return {
+        id: dqtId,
+        position: dqtPosition,
+        data: dqt
+      };
+    });
+  }
+
+  /**
+   *
+   * @param {DataView} dataView
+   * @returns {number[]} DQT positions
+   */
+  static _getDQTMarkerPositions(dataView) {
+    let i = 0;
+    let dqtPositions = [];
+    let marker;
+    while (i < dataView.byteLength) {
+      marker = dataView.getUint16(i);
       i += 2;
       switch (marker) {
-      case 0xffd8:
-        console.info('Start of image');
-        break;
-      case 0xffdB:
-        var dqtLength = data.getUint16(i);
-        var dqtId = data.getUint8(i + 2);
-        var dqt = Array.prototype.slice.call(new Uint8Array(arrayBuffer.slice(i + 3, i + dqtLength)));
-
-        console.info('Found DQT! Position:', i, 'Id:', dqtId, 'Length:', dqt.length);
-        dqts.push({
-          id: dqtId,
-          position: i + 3,
-          data: dqt
-        });
-
-        i += data.getUint16(i);
-        break;
-      case 0xffda:
-        console.info('Found Start of Scan. All DQTs are probably found, aborting...');
-        return dqts;
-      default:
-        console.info('Found marker', marker.toString(16));
-        var length = data.getUint16(i);
-        i += length;
+        case 0xffd8:
+          console.info('Start of image');
+          break;
+        case 0xffdB:
+          console.info('Found DQT! Position:', i);
+          dqtPositions.push(i);
+          i += dataView.getUint16(i);
+          break;
+        case 0xffda:
+          console.info('Found Start of Scan. All DQTs are probably found, aborting...');
+          return dqtPositions;
+        default:
+          console.info('Found marker', marker.toString(16));
+          i += dataView.getUint16(i);
       }
     }
+    return dqtPositions;
   }
 
   /**
