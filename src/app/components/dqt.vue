@@ -1,19 +1,17 @@
 <template>
   <div>
-    <div class="dqt-editor">
-      <span
+    <div
+      class="dqt-editor"
+      tabindex="-1"
+      @keydown="handleKeydown"
+    >
+      <table-cell
         v-for="(dqtByte, index) in dqt.data"
         :key="index"
-        class="dqt-cell"
+        :byte="dqtByte"
+        :active="index == activeIndex"
       >
-        <input
-          :value="dqtByte"
-          class="dqt-input"
-          type="number"
-          number
-          @change="byteChanged(index, $event.target.value)"
-        />
-      </span>
+      </table-cell>
     </div>
     <input
       v-model="boost"
@@ -30,8 +28,12 @@
 
 <script>
 import Vue from 'vue';
+import tableCell from './table-cell.vue';
 
 export default {
+  components: {
+    'table-cell': tableCell
+  },
   props: {
     dqt: {
       type: Object,
@@ -40,7 +42,8 @@ export default {
   },
   data: () => ({
     boost: 0,
-    previousBoost: 0
+    previousBoost: 0,
+    activeIndex: 0
   }),
   methods: {
     byteChanged(index, value) {
@@ -75,6 +78,24 @@ export default {
         ...this.dqt,
         data: dqtData
       });
+    },
+    handleKeydown(e) {
+      e.preventDefault();
+      switch(e.key) {
+        case 'ArrowRight':
+          this.activeIndex += 1;
+          break;
+        case 'ArrowLeft':
+          this.activeIndex -= 1;
+          break;
+        case 'ArrowUp':
+          this.activeIndex -= 8;
+          break;
+        case 'ArrowDown':
+          this.activeIndex += 8;
+          break;
+      }
+      this.activeIndex %= this.dqt.data.length;
     }
   }
 };
@@ -88,14 +109,9 @@ export default {
 
   .dqt-editor {
     max-width: 50rem;
-    margin-bottom: 2rem;
-    float: left;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   }
-
-    .dqt-cell {
-      float: left;
-      width: 12.5%;
-    }
 
     .dqt-boost {
       float: left;

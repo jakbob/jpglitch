@@ -73,4 +73,8 @@ img {
 .editor-area {
   word-break: break-all;
 }
+
+.dqt-area {
+  margin-bottom: 1rem;
+}
 </style>
