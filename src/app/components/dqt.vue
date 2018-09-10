@@ -13,16 +13,6 @@
       >
       </table-cell>
     </div>
-    <input
-      v-model="boost"
-      type="range"
-      min="-255"
-      max="255"
-      value="0"
-      class="dqt-boost"
-      number
-      @change="boostChanged(boost)"
-    />
   </div>
 </template>
 
@@ -41,8 +31,6 @@ export default {
     }
   },
   data: () => ({
-    boost: 0,
-    previousBoost: 0,
     activeIndex: 0
   }),
   methods: {
@@ -57,31 +45,16 @@ export default {
       Vue.set(this.dqt.data, index, value);
       this.$emit('change', this.dqt);
     },
-    boostChanged: function (boost) {
-      const boostDiff = boost - this.previousBoost;
-      this.previousBoost = boost;
-      const dqtData = {...this.dqt.data};
-
-      Array.prototype.forEach.call(dqtData, (value, index) => {
-        value = value + boostDiff;
-
-        if (value > 255) {
-          value = 255;
-        }
-        if (value < 0) {
-          value = 0;
-        }
-        dqtData[index] = value;
-      });
-
-      this.$emit('change', {
-        ...this.dqt,
-        data: dqtData
-      });
-    },
     handleKeydown(e) {
       e.preventDefault();
-      switch(e.key) {
+      if (e.shiftKey) {
+        this.stepChangeValue(e.key);
+      } else if (e.key.startsWith('Arrow')) {
+        this.moveIndicator(e.key);
+      }
+    },
+    moveIndicator(key) {
+      switch(key) {
         case 'ArrowRight':
           this.activeIndex += 1;
           break;
@@ -98,6 +71,15 @@ export default {
       this.activeIndex %= this.dqt.data.length;
       if (this.activeIndex < 0) {
         this.activeIndex += this.dqt.data.length;
+      }
+    },
+    stepChangeValue(key) {
+      const currentValue = this.dqt.data[this.activeIndex];
+      if (key == 'ArrowUp') {
+        this.byteChanged(this.activeIndex, currentValue + 1);
+      }
+      if (key == 'ArrowDown') {
+        this.byteChanged(this.activeIndex, currentValue - 1);
       }
     }
   }
@@ -124,8 +106,10 @@ export default {
   .dqt-editor:after, .dqt-area:after {
     visibility: hidden;
     display: block;
+
     font-size: 0;
     content: " ";
+
     clear: both;
     height: 0;
   }
