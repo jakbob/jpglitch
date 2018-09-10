@@ -11,6 +11,7 @@
         :byte="dqtByte"
         :active="index == activeIndex"
         @change="byteChanged(index, $event)"
+        @activate="activeIndex = index"
       >
       </table-cell>
     </div>

@@ -1,5 +1,8 @@
 <template>
-  <span :class="{active}">{{ byte }}</span>
+  <span 
+    :class="{active}"
+    @click="activate"
+  >{{ byte }}</span>
 </template>
 
 <script>
@@ -13,6 +16,11 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  methods: {
+    activate() {
+      this.$emit('activate');
+    }
   }
 };
 </script>
@@ -23,3 +31,5 @@ export default {
     background: #ddd;
   }
 </style>
+
+
