@@ -18,7 +18,7 @@ export default {
 </script>
 
 <style scoped>
-  .active {
+  :focus .active {
     font-weight: bold;
     background: #ddd;
   }

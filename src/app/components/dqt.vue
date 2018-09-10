@@ -10,6 +10,7 @@
         :key="index"
         :byte="dqtByte"
         :active="index == activeIndex"
+        @change="byteChanged(index, $event)"
       >
       </table-cell>
     </div>
@@ -31,7 +32,8 @@ export default {
     }
   },
   data: () => ({
-    activeIndex: 0
+    activeIndex: 0,
+    lastInputs: []
   }),
   methods: {
     byteChanged(index, value) {
@@ -48,9 +50,13 @@ export default {
     handleKeydown(e) {
       e.preventDefault();
       if (e.shiftKey) {
-        this.stepChangeValue(e.key);
-      } else if (e.key.startsWith('Arrow')) {
-        this.moveIndicator(e.key);
+        this.stepChangeValue(e.code);
+        this.lastInputs = [];
+      } else if (e.code.startsWith('Arrow')) {
+        this.moveIndicator(e.code);
+        this.lastInputs = [];
+      } else if (e.code.startsWith('Digit'))  {
+        this.handleNumberInput(e.code);
       }
     },
     moveIndicator(key) {
@@ -81,36 +87,28 @@ export default {
       if (key == 'ArrowDown') {
         this.byteChanged(this.activeIndex, currentValue - 1);
       }
+    },
+    handleNumberInput(keyCode) {
+      const key = keyCode.replace('Digit', '');
+      const keyValue = parseInt(key, 10);
+      if (isNaN(keyValue)) {
+        return;
+      }
+
+      this.lastInputs.push(keyValue);
+      const newValue = this.lastInputs.reduce((value, nextDigit) => value * 10 + nextDigit, 0);
+      this.byteChanged(this.activeIndex, newValue);
+
+      if (this.lastInputs.length > 2) { this.lastInputs = []; }
     }
   }
 };
 </script>
 
 <style scoped>
-  input[type="number"] {
-    width: 100%;
-    display: inline-block;
-  }
-
   .dqt-editor {
     max-width: 50rem;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  }
-
-    .dqt-boost {
-      float: left;
-      transform: rotateZ(-90deg) translateX(-50%);
-    }
-
-  .dqt-editor:after, .dqt-area:after {
-    visibility: hidden;
-    display: block;
-
-    font-size: 0;
-    content: " ";
-
-    clear: both;
-    height: 0;
   }
 </style>
