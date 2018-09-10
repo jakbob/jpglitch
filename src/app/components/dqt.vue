@@ -96,6 +96,9 @@ export default {
           break;
       }
       this.activeIndex %= this.dqt.data.length;
+      if (this.activeIndex < 0) {
+        this.activeIndex += this.dqt.data.length;
+      }
     }
   }
 };
