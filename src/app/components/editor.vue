@@ -11,10 +11,10 @@
         :key="dqt.id"
         class="dqt-area"
       >
-        <dqt
-          :dqt="dqt"
+        <table-editor
+          :table="dqt"
           @change="dqtUpdated(dqt, index)"
-        ></dqt>
+        ></table-editor>
       </div>
     </div>
   </div>
@@ -22,12 +22,12 @@
 
 <script>
 import Vue from 'vue';
-import Dqt from './dqt.vue';
 import { JPGHelper } from 'app/jpg-helper';
+import tableEditorVue from './table-editor.vue';
 
 export default {
   components: {
-    'dqt': Dqt,
+    'table-editor': tableEditorVue,
   },
   props: {
     imageFile: {

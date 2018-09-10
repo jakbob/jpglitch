@@ -1,14 +1,14 @@
 <template>
   <div>
     <div
-      class="dqt-editor"
+      class="table-editor"
       tabindex="-1"
       @keydown="handleKeydown"
     >
       <table-cell
-        v-for="(dqtByte, index) in dqt.data"
+        v-for="(tableByte, index) in table.data"
         :key="index"
-        :byte="dqtByte"
+        :byte="tableByte"
         :active="index == activeIndex"
         @change="byteChanged(index, $event)"
         @activate="activeIndex = index"
@@ -27,7 +27,7 @@ export default {
     'table-cell': tableCell
   },
   props: {
-    dqt: {
+    table: {
       type: Object,
       default: null
     }
@@ -45,8 +45,8 @@ export default {
         value = 0;
       }
 
-      Vue.set(this.dqt.data, index, value);
-      this.$emit('change', this.dqt);
+      Vue.set(this.table.data, index, value);
+      this.$emit('change', this.table);
     },
     handleKeydown(e) {
       e.preventDefault();
@@ -75,13 +75,13 @@ export default {
           this.activeIndex += 8;
           break;
       }
-      this.activeIndex %= this.dqt.data.length;
+      this.activeIndex %= this.table.data.length;
       if (this.activeIndex < 0) {
-        this.activeIndex += this.dqt.data.length;
+        this.activeIndex += this.table.data.length;
       }
     },
     stepChangeValue(key) {
-      const currentValue = this.dqt.data[this.activeIndex];
+      const currentValue = this.table.data[this.activeIndex];
       if (key == 'ArrowUp') {
         this.byteChanged(this.activeIndex, currentValue + 1);
       }
@@ -107,7 +107,7 @@ export default {
 </script>
 
 <style scoped>
-  .dqt-editor {
+  .table-editor {
     max-width: 50rem;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
