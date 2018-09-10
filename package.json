@@ -1,5 +1,6 @@
 {
   "name": "jpglitch",
+  "description": "A web based tool for messing with JPEG encoded images",
   "private": true,
   "scripts": {
     "start": "webpack-dev-server --open",
