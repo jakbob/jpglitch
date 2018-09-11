@@ -22,7 +22,8 @@
 
 <script>
 import Vue from 'vue';
-import { JPGHelper } from 'app/jpg-helper';
+import { toZigzag, fromZigzag } from 'app/helpers/sort-helper';
+import { JPGHelper } from 'app/helpers/jpg-helper';
 import tableEditorVue from './table-editor.vue';
 
 export default {
@@ -42,7 +43,11 @@ export default {
   watch: {
     imageFile(value) {
       if (!value) { return; }
-      this.dqts = JPGHelper.parseQuantizationTables(value);
+      const dqts = JPGHelper.parseQuantizationTables(value);
+      this.dqts = dqts.map(dqt => ({
+        ...dqt,
+        data: toZigzag(dqt.data, 8)
+      }));
       this.rawImage = new Uint8Array(value);
     }
   },
@@ -51,9 +56,9 @@ export default {
       Vue.set(this.dqts, index, dqt);
 
       var raw = this.rawImage.subarray(0);
-      raw.set(dqt.data, dqt.position);
+      raw.set(fromZigzag(dqt.data, 8), dqt.position);
       this.rawImage = raw;
-    }
+    },
   }
 };
 </script>

@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { FileHelper } from './file-helper';
+import { FileHelper } from 'app/helpers/file-helper';
 import FileSelect from './components/file-select.vue';
 import Editor from './components/editor.vue';
 
