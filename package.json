@@ -4,14 +4,19 @@
   "scripts": {
     "start": "webpack-dev-server --open",
     "build": "webpack --config webpack.config.js --mode development",
+    "test": "mocha --require babel-register \"src/**/*.test.js\"",
     "lint": "eslint src"
   },
   "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0",
+    "chai": "^4.1.2",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^0.28.11",
     "eslint": "^5.5.0",
     "eslint-plugin-vue": "^4.7.1",
     "html-webpack-plugin": "^3.2.0",
+    "mocha": "^5.2.0",
     "style-loader": "^0.21.0",
     "vue-loader": "^15.4.1",
     "vue-template-compiler": "^2.5.17",
