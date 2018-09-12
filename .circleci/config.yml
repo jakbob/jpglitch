@@ -5,6 +5,7 @@ defaults: &defaults
 
 version: 2
 jobs:
+  install_packages:
     <<: *defaults
     steps:
       - checkout
