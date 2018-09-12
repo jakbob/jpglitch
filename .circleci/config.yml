@@ -3,6 +3,14 @@ defaults: &defaults
   docker:
       - image: circleci/node:10.10
 
+persist: &persist
+  paths:
+    - dist/*
+    - node_modules/*
+    - src/*
+    - package.json
+    - webpack.config.js
+
 version: 2
 jobs:
   checkout:
@@ -20,8 +28,7 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
       - persist_to_workspace:
           root: ~/repo
-          paths: 
-            - *
+          <<: *persist
   test:
     <<: *defaults
     steps:
