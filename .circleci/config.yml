@@ -10,6 +10,7 @@ persist: &persist
     - src/*
     - package.json
     - webpack.config.js
+    
 
 version: 2
 jobs:
