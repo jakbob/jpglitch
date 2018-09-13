@@ -1,13 +1,12 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+      - image: circleci/node:10.10
+    
 version: 2
 jobs:
-  install_packages:
-    docker:
-      - image: circleci/node:10.10
-    working_directory: ~/repo
+  checkout:
+    <<: *defaults
     steps:
       - checkout
       - restore_cache:
@@ -19,29 +18,41 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
+      - persist_to_workspace:
+          root: .
+          paths: .
   test:
-    docker:
-      - image: circleci/node:10.10
+    <<: *defaults
     steps:
-      - checkout
+      - attach_workspace:
+          at: ~/repo
       - run: npm test
-      - run: npm lint
-  build:
-    docker:
-      - image: circleci/node:10.10
+  lint:
+    <<: *defaults
     steps:
-      - checkout
+      - attach_workspace:
+          at: ~/repo
+      - run: npm run lint
+  build:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
       - run: npm run build
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - install_packages
+      - checkout
       - test:
           requires:
-            - install_packages
+            - checkout
+      - lint:
+          requires:
+            - checkout
       - build:
           requires:
-            - install_packages
+            - test
+            - lint
 
 
