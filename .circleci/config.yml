@@ -11,7 +11,6 @@ persist: &persist
     - package.json
     - webpack.config.js
     
-
 version: 2
 jobs:
   checkout:
@@ -56,10 +55,10 @@ workflows:
       - checkout
       - test:
           requires:
-            - install_packages
+            - checkout
       - lint:
           requires:
-            - install_packages
+            - checkout
       - build:
           requires:
             - test
