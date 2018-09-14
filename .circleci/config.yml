@@ -2,11 +2,6 @@ defaults: &defaults
   working_directory: ~/repo
   docker:
       - image: circleci/node:10.10
-    
-ignore_branches: &ignore_branches
-  filters:
-    branches:
-      ignore: gh-pages
 
 version: 2
 jobs:
@@ -65,7 +60,10 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - checkout
+      - checkout:      
+          filters:
+            branches:
+              ignore: gh-pages
       - test:
           requires:
             - checkout
