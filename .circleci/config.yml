@@ -3,6 +3,11 @@ defaults: &defaults
   docker:
       - image: circleci/node:10.10
     
+ignore_branches: &ignore_branches
+  filters:
+    branches:
+      ignore: gh-pages
+
 version: 2
 jobs:
   checkout:
@@ -39,6 +44,23 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - run: npm run build
+      - persist_to_workspace:
+          root: .
+          paths: .
+  deploy:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run: 
+        name: Deploy to github pages
+        command: |
+          cd dist
+          git init
+          git remote add deploy $CIRCLE_REPOSITORY_URL
+          git add -A
+          git commit -m "Automated deployment to GitHub Pages: ${CIRCLE_SHA1}"
+
 workflows:
   version: 2
   build_and_test:
@@ -54,5 +76,9 @@ workflows:
           requires:
             - test
             - lint
-
-
+      - deploy:
+          requires:
+            build
+          filters:
+            branches:
+              only: master
