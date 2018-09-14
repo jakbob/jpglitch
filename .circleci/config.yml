@@ -52,6 +52,10 @@ jobs:
           command: |
             cd dist
             git init
+            
+            git config --local user.email $GH_EMAIL
+            git config --local user.name $GH_NAME
+      
             git remote add deploy $CIRCLE_REPOSITORY_URL
             git add -A
             git commit -m "Automated deployment to GitHub Pages: ${CIRCLE_SHA1}"
