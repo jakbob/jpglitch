@@ -55,8 +55,8 @@ jobs:
             cd dist
             git init
             
-            git config --global user.email $GH_EMAIL
-            git config --global user.name $GH_NAME
+            git config --local user.email $GH_EMAIL
+            git config --local user.name $GH_NAME
       
             git remote add deploy $CIRCLE_REPOSITORY_URL
             git add -A
