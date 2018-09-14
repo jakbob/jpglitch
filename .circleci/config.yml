@@ -58,12 +58,12 @@ jobs:
 
 workflows:
   version: 2
-  filters:
-    branches:
-      ignore: gh-pages
   build_and_test:
     jobs:
       - checkout
+          filters:
+            branches:
+              ignore: gh-pages
       - test:
           requires:
             - checkout
