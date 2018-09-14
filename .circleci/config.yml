@@ -50,6 +50,7 @@ jobs:
       - run: 
           name: Deploy to github pages
           command: |
+            echo $GH_EMAIL
             cd dist
             git init
             
@@ -81,7 +82,7 @@ workflows:
       - deploy:
           requires:
             - build
-          filters:
-            branches:
-              only: 
-                - master
+          #filters:
+          #  branches:
+          #    only: 
+          #      - master
