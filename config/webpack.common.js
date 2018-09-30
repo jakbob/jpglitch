@@ -5,14 +5,12 @@ const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
-  mode: 'development',
   entry: './src/app/main.js',
-  devtool: 'inline-source-map',
-  devServer: {
-    contentBase: './dist'
-  },
+  context: path.resolve(__dirname, '..'),
   plugins: [
-    new CleanWebpackPlugin(['dist']),
+    new CleanWebpackPlugin(['dist'], {
+      root: path.resolve(__dirname, '..')
+    }),
     new HtmlWebpackPlugin({
       template: 'src/index.html'
     }),
@@ -35,10 +33,10 @@ module.exports = {
     ]
   },
   output: {
-    filename: 'main.js',
-    path: path.resolve(__dirname, 'dist')
+    filename: '[name].[hash].js',
+    path: path.resolve(__dirname, '..', 'dist')
   },
   resolve: {
-    modules: [path.resolve(__dirname, 'src'), 'node_modules']
+    modules: [path.resolve(__dirname, '..', 'src'), 'node_modules']
   }
 };
