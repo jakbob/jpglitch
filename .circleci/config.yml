@@ -42,23 +42,11 @@ jobs:
       - persist_to_workspace:
           root: .
           paths: .
-  deploy:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/repo
-      - run: 
-          name: Deploy to github pages
-          command: ./deploy.sh dist/
-
 workflows:
   version: 2
   build_and_test:
     jobs:
       - checkout:      
-          filters:
-            branches:
-              ignore: gh-pages
       - test:
           requires:
             - checkout
@@ -69,10 +57,3 @@ workflows:
           requires:
             - test
             - lint
-      - deploy:
-          requires:
-            - build
-          #filters:
-          #  branches:
-          #    only: 
-          #      - master
