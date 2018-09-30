@@ -3,8 +3,9 @@
   "description": "A web based tool for messing with JPEG encoded images",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server --open",
-    "build": "webpack --config webpack.config.js --mode development",
+    "start": "webpack-dev-server --open --config config/webpack.dev.js",
+    "build": "webpack --config config/webpack.dev.js",
+    "build:production": "webpack --config config/webpack.prod.js",
     "test": "mocha --require babel-register \"src/**/*.test.js\"",
     "lint": "eslint src"
   },
@@ -24,7 +25,8 @@
     "webpack": "^4.18.0",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.8",
-    "webpack-hot-middleware": "^2.23.1"
+    "webpack-hot-middleware": "^2.23.1",
+    "webpack-merge": "^4.1.4"
   },
   "engines": {
     "node": ">=0.10.0"
