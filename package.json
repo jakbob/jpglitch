@@ -12,26 +12,26 @@
   "devDependencies": {
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
-    "chai": "^4.1.2",
-    "clean-webpack-plugin": "^0.1.19",
-    "css-loader": "^0.28.11",
-    "eslint": "^5.5.0",
-    "eslint-plugin-vue": "^4.7.1",
+    "chai": "^4.2.0",
+    "clean-webpack-plugin": "^1.0.0",
+    "css-loader": "^2.1.0",
+    "eslint": "^5.12.1",
+    "eslint-plugin-vue": "^5.1.0",
     "html-webpack-plugin": "^3.2.0",
     "mocha": "^5.2.0",
-    "style-loader": "^0.21.0",
-    "vue-loader": "^15.4.1",
-    "vue-template-compiler": "^2.5.17",
-    "webpack": "^4.18.0",
-    "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.8",
-    "webpack-hot-middleware": "^2.23.1",
-    "webpack-merge": "^4.1.4"
+    "style-loader": "^0.23.1",
+    "vue-loader": "^15.5.1",
+    "vue-template-compiler": "^2.5.22",
+    "webpack": "^4.29.0",
+    "webpack-cli": "^3.2.1",
+    "webpack-dev-server": "^3.1.14",
+    "webpack-hot-middleware": "^2.24.3",
+    "webpack-merge": "^4.2.1"
   },
   "engines": {
     "node": ">=0.10.0"
   },
   "dependencies": {
-    "vue": "^2.5.17"
+    "vue": "^2.5.22"
   }
 }
