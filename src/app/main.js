@@ -1,6 +1,6 @@
+import { JPGHelper } from 'app/helpers/jpg-helper';
 import Vue from 'vue';
 import App from './app.vue';
-import { JPGHelper } from 'app/helpers/jpg-helper';
 import './main.css';
 
 Vue.filter('base64Jpeg', function (rawImage) {

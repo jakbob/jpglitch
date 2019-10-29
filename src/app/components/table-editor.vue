@@ -82,11 +82,19 @@ export default {
     },
     stepChangeValue(key) {
       const currentValue = this.table.data[this.activeIndex];
-      if (key == 'ArrowUp') {
-        this.byteChanged(this.activeIndex, currentValue + 1);
-      }
-      if (key == 'ArrowDown') {
-        this.byteChanged(this.activeIndex, currentValue - 1);
+      switch(key) {
+        case 'ArrowUp':
+          this.byteChanged(this.activeIndex, currentValue + 10);
+          break;
+        case 'ArrowDown':
+          this.byteChanged(this.activeIndex, currentValue - 10);
+          break;
+        case 'ArrowRight': 
+          this.byteChanged(this.activeIndex, currentValue + 1);
+          break;
+        case 'ArrowLeft': 
+          this.byteChanged(this.activeIndex, currentValue - 1);
+          break;
       }
     },
     handleNumberInput(keyCode) {
