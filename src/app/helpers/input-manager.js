@@ -20,16 +20,16 @@ export class InputManager {
   _handleValueChange(key) {
     switch(key) {
       case 'ArrowUp':
-        this._triggerCallback('valueChange', 10)
+        this._triggerCallback('valueChange', 10);
         break;
       case 'ArrowDown':
-        this._triggerCallback('valueChange', -10)
+        this._triggerCallback('valueChange', -10);
         break;
       case 'ArrowRight': 
-        this._triggerCallback('valueChange', 1)
+        this._triggerCallback('valueChange', 1);
         break;
       case 'ArrowLeft': 
-        this._triggerCallback('valueChange', -1)
+        this._triggerCallback('valueChange', -1);
         break;
     }
   }
@@ -37,17 +37,17 @@ export class InputManager {
   _handleCursorMove(key) {
     switch(key) {
       case 'ArrowRight':
-        this._triggerCallback('cursorMove', 1)
+        this._triggerCallback('cursorMove', 1);
         this.activeIndex += 1;
         break;
       case 'ArrowLeft':
-        this._triggerCallback('cursorMove', -1)
+        this._triggerCallback('cursorMove', -1);
         break;
       case 'ArrowUp':
-        this._triggerCallback('cursorMove', -8)
+        this._triggerCallback('cursorMove', -8);
         break;
       case 'ArrowDown':
-        this._triggerCallback('cursorMove', 8)
+        this._triggerCallback('cursorMove', 8);
         break;
     }
   }
@@ -59,17 +59,17 @@ export class InputManager {
       return;
     }
 
-    this._triggerCallback('valueSet', digitValue)
+    this._triggerCallback('valueSet', digitValue);
   }
 
   _triggerCallback(cbName, value) {
-    const selectedCallback = this.callbacks[cbName]
+    const selectedCallback = this.callbacks[cbName];
 
     if (!selectedCallback) {
       return;
     }
 
-    selectedCallback(value)
+    selectedCallback(value);
   }
 
 }
