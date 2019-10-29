@@ -10,7 +10,6 @@
         :key="index"
         :byte="tableByte"
         :active="index == activeIndex"
-        @change="byteChanged(index, $event)"
         @activate="activeIndex = index"
       >
       </table-cell>
@@ -21,6 +20,7 @@
 <script>
 import Vue from 'vue';
 import tableCell from './table-cell.vue';
+import { InputManager } from '../helpers/input-manager'
 
 export default {
   components: {
@@ -36,8 +36,39 @@ export default {
     activeIndex: 0,
     lastInputs: []
   }),
+  mounted() {
+    this.inputManager = new InputManager({
+      'valueChange': this.onValueChanged,
+      'valueSet': this.onValueSet,
+      'cursorMove': this.onCursorMove,
+    })
+  },
   methods: {
-    byteChanged(index, value) {
+    handleKeydown(e) {
+      e.preventDefault();
+      this.inputManager.handleInput(e);
+    },
+    onValueChanged(change) {
+      const currentValue = this.table.data[this.activeIndex];
+      this.setByte(this.activeIndex, currentValue + change);
+      this.lastInputs = [];
+    },
+    onValueSet(change) {
+      this.lastInputs.push(change);
+      const newValue = this.lastInputs.reduce((value, nextDigit) => value * 10 + nextDigit, 0);
+      this.setByte(this.activeIndex, newValue);
+
+      if (this.lastInputs.length > 2) { this.lastInputs = []; }
+    },
+    onCursorMove(change) {
+      this.activeIndex += change
+      this.activeIndex %= this.table.data.length;
+      if (this.activeIndex < 0) {
+        this.activeIndex += this.table.data.length;
+      }
+      this.lastInputs = [];
+    },
+    setByte(index, value) {
       if (value > 255) {
         value = 255;
       }
@@ -47,68 +78,6 @@ export default {
 
       Vue.set(this.table.data, index, value);
       this.$emit('change', this.table);
-    },
-    handleKeydown(e) {
-      e.preventDefault();
-      if (e.shiftKey) {
-        this.stepChangeValue(e.code);
-        this.lastInputs = [];
-      } else if (e.code.startsWith('Arrow')) {
-        this.moveIndicator(e.code);
-        this.lastInputs = [];
-      } else if (e.code.startsWith('Digit'))  {
-        this.handleNumberInput(e.code);
-      }
-    },
-    moveIndicator(key) {
-      switch(key) {
-        case 'ArrowRight':
-          this.activeIndex += 1;
-          break;
-        case 'ArrowLeft':
-          this.activeIndex -= 1;
-          break;
-        case 'ArrowUp':
-          this.activeIndex -= 8;
-          break;
-        case 'ArrowDown':
-          this.activeIndex += 8;
-          break;
-      }
-      this.activeIndex %= this.table.data.length;
-      if (this.activeIndex < 0) {
-        this.activeIndex += this.table.data.length;
-      }
-    },
-    stepChangeValue(key) {
-      const currentValue = this.table.data[this.activeIndex];
-      switch(key) {
-        case 'ArrowUp':
-          this.byteChanged(this.activeIndex, currentValue + 10);
-          break;
-        case 'ArrowDown':
-          this.byteChanged(this.activeIndex, currentValue - 10);
-          break;
-        case 'ArrowRight': 
-          this.byteChanged(this.activeIndex, currentValue + 1);
-          break;
-        case 'ArrowLeft': 
-          this.byteChanged(this.activeIndex, currentValue - 1);
-          break;
-      }
-    },
-    handleNumberInput(keyCode) {
-      const key = keyCode.replace('Digit', '');
-      const keyValue = parseInt(key, 10);
-      if (isNaN(keyValue)) {
-        return;
-      }
-
-      this.lastInputs.push(keyValue);
-      const newValue = this.lastInputs.reduce((value, nextDigit) => value * 10 + nextDigit, 0);
-      this.byteChanged(this.activeIndex, newValue);
-
-      if (this.lastInputs.length > 2) { this.lastInputs = []; }
     }
   }
 };
