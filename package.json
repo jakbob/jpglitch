@@ -6,7 +6,7 @@
     "start": "webpack-dev-server --open --config config/webpack.dev.js",
     "build": "webpack --config config/webpack.dev.js",
     "build:production": "webpack --config config/webpack.prod.js",
-    "test": "mocha --require babel-register \"src/**/*.test.js\"",
+    "test": "mocha --require babel-register --require src/test-utils/common.js \"src/**/*.test.js\"",
     "lint": "eslint src"
   },
   "devDependencies": {
@@ -19,6 +19,8 @@
     "eslint-plugin-vue": "^5.2.3",
     "html-webpack-plugin": "^3.2.0",
     "mocha": "^6.2.0",
+    "sinon": "^7.5.0",
+    "sinon-chai": "^3.3.0",
     "style-loader": "^1.0.0",
     "vue-loader": "^15.7.1",
     "vue-template-compiler": "^2.6.10",
